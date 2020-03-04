@@ -1,5 +1,5 @@
 # DFS(深度優先搜索)
-```C++
+```c++
 #include<stdio.h>
 #include<string.h>
 #define MAX 100
@@ -61,7 +61,7 @@ int main()
 ```
 ---
 # BFS(廣度優先搜索)
-```C++
+```c++
 #include<stdio.h>
 #include<string.h>
 #include<queue>
@@ -111,7 +111,7 @@ int main()
 # Dijkstra
 >Question describe:
 >给出顶点数(n)、边数(m)、起点(s)、终点(t)，求 s 到 t 的最短路径
-```C++
+```c++
 #include <iostream>
 #include <cstring>
 #define INF 0x3f3f3f3f;
@@ -190,3 +190,115 @@ int main(){
  */
 ```
 >注释(这个也太难啦吧)：松弛松弛，比较比较。
+
+# prim最小生成树
+
+现有村落间道路的统计数据表中，列出了有可能建设成标准公路的若干条道路的成本，求使每个村落都有公路连通所需要的最低成本。
+
+输入格式:
+
+输入数据包括城镇数目正整数N（≤1000）和候选道路数目M（≤3N）；随后的M行对应M条道路，每行给出3个正整数，分别是该条道路直接连通的两个城镇的编号以及该道路改建的预算成本。为简单起见，城镇从1到N编号。
+
+输出格式:
+
+输出村村通需要的最低成本。如果输入数据不足以保证畅通，则输出−1，表示需要建设更多公路。
+
+```
+Input:
+6 15
+1 2 5
+1 3 3
+1 4 7
+1 5 4
+1 6 2
+2 3 4
+2 4 6
+2 5 2
+2 6 6
+3 4 6
+3 5 1
+3 6 1
+4 5 10
+4 6 8
+5 6 3
+
+output:
+12
+```
+```c++
+//No.7
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#define INF 0x3f3f3f3f;
+using namespace std;
+
+int N, M, result;
+int map[1010][1010], lowCost[1010];
+
+int findMin() {
+    int minCost = INF;
+    int k, j;
+    for (k = 0, j = 1; j <= N; j++) {
+        if (lowCost[j] && lowCost[j] < minCost) {
+            minCost = lowCost[j];
+            k = j;
+        }
+    }
+    return k;
+}
+
+int prim() {
+
+    for (int i = 1; i <= N; i++) {
+        lowCost[i] = map[1][i];
+    }
+    lowCost[1] = 0;
+    for (int i = 1; i < N; i++) {
+        int K = findMin();
+        if (K) {
+            result += lowCost[K];
+            lowCost[K] = 0;
+            for (int j = 2; j <= N; j++) {
+                if (lowCost[j] && map[K][j] < lowCost[j]) {
+                    lowCost[j] = map[K][j];
+                }
+            }
+        }
+        else
+            return -1;
+    }
+    return result;
+}
+
+int main() {
+    int a, b, c;
+    cin >> N >> M;
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++)
+            if (i == j)
+                map[i][j] = 0;
+            else
+                map[i][j] = INF;
+    }
+    for (int i = 0; i < M; i++) {
+        cin >> a >> b >> c;
+        map[a][b] = map[b][a] = c;
+    }
+    cout << prim() << endl;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
